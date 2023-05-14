@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../models/product_model.dart';
 class ProductCard extends StatefulWidget {
-  const ProductCard({required this.name,required this.id,required this.soluong, required this.price, required this.url,Key? key}) : super(key: key);
-final String name, price, url, id;
-final int soluong;
+  const ProductCard({required this.product,Key? key}) : super(key: key);
+
+final Product product;
   @override
   State<ProductCard> createState() => _ProductCardState();
 }
@@ -15,7 +16,7 @@ class _ProductCardState extends State<ProductCard> {
     return InkWell(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 5,
+        height: MediaQuery.of(context).size.height / 4,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
@@ -40,7 +41,7 @@ class _ProductCardState extends State<ProductCard> {
                           borderRadius: BorderRadius.circular(20),
                           child: SizedBox.fromSize(
                               size: Size.fromRadius(48), // Image radius
-                              child: Image.network(widget.url)),
+                              child: Image.network(widget.product.url)),
                         ),
                       ),
                       SizedBox(
@@ -56,7 +57,7 @@ class _ProductCardState extends State<ProductCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Tên sản phẩm: ${widget.name}',
+                              'Tên sản phẩm: ${widget.product.name}',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -71,7 +72,7 @@ class _ProductCardState extends State<ProductCard> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Giá sản phẩm: ${widget.price}',
+                                  'Giá sản phẩm: ${widget.product.price}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -87,12 +88,64 @@ class _ProductCardState extends State<ProductCard> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Số lượng: ${widget.soluong}',
+                                  'Số lượng: ${widget.product.soluong}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
 
                                   ),
+
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Loại sản phẩm: ${widget.product.loai}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+
+                                  ),
+
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Người đăng: ${widget.product.nguoidang}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+
+                                  ),
+
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Địa chỉ: ${widget.product.diachi}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+
+                                  ),
+
                                 ),
                               ],
                             ),
@@ -101,7 +154,7 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                       IconButton(
                           onPressed: () {
-                            FirebaseFirestore.instance.collection('product').doc(widget.id).delete();
+                            FirebaseFirestore.instance.collection('product').doc(widget.product.id).delete();
 
                           },
                           icon: Icon(

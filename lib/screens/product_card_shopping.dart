@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:foodapp/models/user.dart';
+import '../models/product_model.dart';
 class ProductCardShopping extends StatefulWidget {
-  const ProductCardShopping({required this.name,required this.id,required this.soluong, required this.price, required this.url,Key? key}) : super(key: key);
-  final String name, price, url, id;
-  final int soluong;
+  const ProductCardShopping({required this.productId ,required this.product,Key? key}) : super(key: key);
+  final String productId;
+  final Product product;
+
   @override
   State<ProductCardShopping> createState() => _ProductCardShoppingState();
 }
@@ -15,7 +18,7 @@ class _ProductCardShoppingState extends State<ProductCardShopping> {
     return InkWell(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 5,
+        height: MediaQuery.of(context).size.height / 4.2,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
@@ -32,7 +35,7 @@ class _ProductCardShoppingState extends State<ProductCardShopping> {
                     children: [
                       Container(
                         // width: 100.0,
-                        // height: 100.0,
+                        // height: 200.0,
                         padding: EdgeInsets.all(8),
                         // Border width
                         //decoration: BoxDecoration(color: Color(0xFF00000A), borderRadius: BorderRadius.circular(20)),
@@ -40,7 +43,7 @@ class _ProductCardShoppingState extends State<ProductCardShopping> {
                           borderRadius: BorderRadius.circular(20),
                           child: SizedBox.fromSize(
                               size: Size.fromRadius(48), // Image radius
-                              child: Image.network(widget.url)),
+                              child: Image.network(widget.product.url)),
                         ),
                       ),
                       SizedBox(
@@ -48,15 +51,15 @@ class _ProductCardShoppingState extends State<ProductCardShopping> {
                       ),
                       Container(
                         // width: 180.0,
-                        // height: 150.0,
-                        // color: Colors.red,
+                        // height: double.infinity,
+                        // color: Crs.red,
                         padding: EdgeInsets.all(8),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Tên sản phẩm: ${widget.name}',
+                              'Tên sản phẩm: ${widget.product.name}',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -71,7 +74,7 @@ class _ProductCardShoppingState extends State<ProductCardShopping> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Giá sản phẩm: ${widget.price}',
+                                  'Giá sản phẩm: ${widget.product.price}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -87,7 +90,55 @@ class _ProductCardShoppingState extends State<ProductCardShopping> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Số lượng: ${widget.soluong}',
+                                  'Số lượng: ${widget.product.soluong}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Loại sản phẩm: ${widget.product.loai}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Người đăng: ${widget.product.nguoidang}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Địa chỉ: ${widget.product.diachi}',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -100,13 +151,24 @@ class _ProductCardShoppingState extends State<ProductCardShopping> {
                         ),
                       ),
                       IconButton(
-                          onPressed: () {
-                            FirebaseFirestore.instance.collection('card').doc(widget.id).delete();
-                            FirebaseFirestore.instance.collection('product').doc(widget.id).update(
+                          onPressed: () async {
+                            late int soluonghientai;
+                             await FirebaseFirestore.instance.collection('product').doc(widget.productId).get().then((DocumentSnapshot doc){
+                              // soluonghientai = data['soluong'];
+                               if (doc.exists) {
+                                 Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                                 soluonghientai = data['soluong'];
+                               }
+
+                            });
+                            FirebaseFirestore.instance.collection('product').doc(widget.productId).update(
                                 {
-                                  'soluong': widget.soluong
+                                  'soluong': widget.product.soluong + soluonghientai
                                 }
-                            );
+                            )
+                            .then((value) {
+                              FirebaseFirestore.instance.collection('card').doc(widget.product.id).delete();
+                            });
 
                           },
                           icon: Icon(

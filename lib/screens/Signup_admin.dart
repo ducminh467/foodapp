@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/screens/Signup_admin.dart';
 import 'package:foodapp/screens/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:foodapp/constant/constant.dart';
 import 'package:foodapp/models/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-class Signup extends StatefulWidget {
+class SignupAdmin extends StatefulWidget {
 
 
-   const Signup({Key? key}) : super(key: key);
+  const SignupAdmin({Key? key}) : super(key: key);
 
   @override
-  State<Signup> createState() => _SignupState();
+  State<SignupAdmin> createState() => _SignupAdminState();
 }
 
-class _SignupState extends State<Signup> {
+class _SignupAdminState extends State<SignupAdmin> {
   @override
   Widget build(BuildContext context) {
     TextEditingController emailController = TextEditingController();
@@ -24,7 +23,7 @@ class _SignupState extends State<Signup> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: lightgreenshede1,
-          title: Text('Đăng kí người dùng',
+          title: Text('Đăng kí admin',
               style: TextStyle(color: primarygreen)),
           centerTitle: true,
         ),
@@ -37,12 +36,12 @@ class _SignupState extends State<Signup> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 60),
-                    child: Image.asset(
-                      'lib/assets/logo1.png',
-                      width: 200,
-                      height: 200,
-                    )
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 60),
+                      child: Image.asset(
+                        'lib/assets/logo1.png',
+                        width: 200,
+                        height: 200,
+                      )
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -72,7 +71,7 @@ class _SignupState extends State<Signup> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: TextField(
-                     controller: nameController,
+                      controller: nameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(90.0),
@@ -85,28 +84,28 @@ class _SignupState extends State<Signup> {
                     height: 80,
                     padding: const EdgeInsets.all(20),
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: lightgreenshede1,
-                        minimumSize: const Size.fromHeight(50),
-                      ),
-                      child: Text('Đăng kí',
+                        style: ElevatedButton.styleFrom(
+                          primary: lightgreenshede1,
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        child: Text('Đăng kí',
                           style: TextStyle(
                               fontSize: 18,
                               color: primarygreen
                           ),),
-                      onPressed: () {
-                        CollectionReference users = FirebaseFirestore.instance
-                            .collection('user');
+                        onPressed: () {
+                          CollectionReference users = FirebaseFirestore.instance
+                              .collection('user');
 
-                        users.doc(emailController.value.text).get()
-                          .then((DocumentSnapshot doc) {
+                          users.doc(emailController.value.text).get()
+                              .then((DocumentSnapshot doc) {
                             if(!doc.exists){
                               users.doc(emailController.value.text).set(
                                 {
                                   'email': emailController.value.text,
                                   'password': passwordController.value.text,
                                   'name': nameController.value.text,
-                                  'defind': 1
+                                  'defind': 0
                                 },
 
                               ).then((value) =>
@@ -118,27 +117,16 @@ class _SignupState extends State<Signup> {
                               passwordController.clear();
                               nameController.clear();
                               ScaffoldMessenger.of(context).showSnackBar( const
-                                SnackBar(content: Text("Tài khoản đã tồn tại"))
+                              SnackBar(content: Text("Tài khoản đã tồn tại"))
                               );
-
                             }
-                        });
+                          });
 
 
-                      }
-                      ),
-                  ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SignupAdmin()));
-              },
-              child: const Text('Đăng kí tài khoản admin'),
-
-            )
-                ],
-
+                        }
+                    ),
+                  )],
               ),
-
             ),
           ),
         ));

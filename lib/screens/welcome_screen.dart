@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodapp/constant/constant.dart';
-import 'package:foodapp/models/allinonboardscreen.dart';
+import 'package:foodapp/models/welcome_model.dart';
 
 import 'login.dart';
 
